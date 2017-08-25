@@ -52,9 +52,10 @@ void rate(const map<string, long>& ngram, const map<string, long>& vocab, long c
 	for (auto ngramit = ngram.begin(); ngramit != ngram.end(); ngramit++) {
 		auto it = vocab.find(ngramit->first);
 		if (it != vocab.end() && it->second >= cutoff)
-			find_count += it->second;
-		all_count += it->second;
+			find_count += ngramit->second;
+		all_count += ngramit->second;
 	}
+	cout << "find_count: " << find_count << ", all_count: " << all_count << endl;
 	cout << "cutoff: " << cutoff << ", rate: " << (double)find_count / all_count << endl;
 }
 
