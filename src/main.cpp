@@ -7,35 +7,26 @@
 using namespace std;
 
 
-void load_ngram(const char* file, vector<string>& ngram);
 void load_vocab(const char* file, map<string, long>& vocab);
 void split_bychar(const string& str, vector<string>& vec, const char separator);
-void rate(const vector<string>& ngram, const map<string, long>& vocab, long cutoff);
+void rate(const map<string, long>& ngram, const map<string, long>& vocab, long cutoff);
 
 int main(int argc, char* argv[]) {
-	if(argc >= 3){
-		vector<string> ngram;
+	if (argc >= 3) {
+		map<string, long> ngram;
 		map<string, long> vocab;
-		load_ngram(argv[1], ngram);
+		cout << "load ngram..." << endl;
+		load_vocab(argv[1], ngram);
+		cout << "load ngram ok" << endl;
+		cout << "load vocab...." << endl;
 		load_vocab(argv[2], vocab);
-		rate(ngram, vocab, 0);
+		cout << "load vocab ok" << endl;
+		for (int idx = 0; idx < 100; idx++)
+			rate(ngram, vocab, idx);
 	}
 	else
 		cout << "no args" << endl;
 	return 0;
-}
-
-void load_ngram(const char* file, vector<string>& ngram) {
-	ifstream in(file);
-	if (in.is_open()) {
-		string line;
-		while (getline(in, line)) {
-			ngram.push_back(line);
-		}
-		in.close();
-	}
-	else
-		cout << "ngram file don't exist" << endl;
 }
 
 void load_vocab(const char* file, map<string, long>& vocab) {
@@ -55,15 +46,17 @@ void load_vocab(const char* file, map<string, long>& vocab) {
 		cout << "vocab file don't exist" << endl;
 }
 
-void rate(const vector<string>& ngram, const map<string, long>& vocab, long cutoff = 0) {
-	int maxsize = ngram.size();
+void rate(const map<string, long>& ngram, const map<string, long>& vocab, long cutoff) {
+	int all_count = 0;
 	int find_count = 0;
-	for (int idx = 0; idx < maxsize; idx++) {
-		 auto it = vocab.find(ngram[idx]);
-		 if (it != vocab.end() && it->second >= cutoff)
-			 find_count++;
+	//	for (int idx = 0; idx < maxsize; idx++) {
+	for (auto ngramit = ngram.begin(); ngramit != ngram.end(); ngramit++) {
+		auto it = vocab.find(ngramit->first);
+		if (it != vocab.end() && it->second >= cutoff)
+			find_count += it->second;
+		all_count += it->second;
 	}
-	cout << "cutoff: " << cutoff << ", rate: " << (double)find_count / maxsize << endl;
+	cout << "cutoff: " << cutoff << ", rate: " << (double)find_count / all_count << endl;
 }
 
 void split_bychar(const string& str, vector<string>& vec, const char separator = ' ') {
