@@ -13,7 +13,7 @@ void split_bychar(const string& str, vector<string>& vec, const char separator);
 void rate(const vector<string>& ngram, const map<string, long>& vocab, long cutoff);
 
 int main(int argc, char* argv[]) {
-	if(argc > 3){
+	if(argc >= 3){
 		vector<string> ngram;
 		map<string, long> vocab;
 		load_ngram(argv[1], ngram);
@@ -60,7 +60,7 @@ void rate(const vector<string>& ngram, const map<string, long>& vocab, long cuto
 	int find_count = 0;
 	for (int idx = 0; idx < maxsize; idx++) {
 		 auto it = vocab.find(ngram[idx]);
-		 if (it->second >= cutoff)
+		 if (it != vocab.end() && it->second >= cutoff)
 			 find_count++;
 	}
 	cout << "cutoff: " << cutoff << ", rate: " << (double)find_count / maxsize << endl;
