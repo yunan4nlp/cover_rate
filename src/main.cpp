@@ -47,9 +47,8 @@ void load_vocab(const char* file, map<string, long>& vocab) {
 }
 
 void rate(const map<string, long>& ngram, const map<string, long>& vocab, long cutoff) {
-	int all_count = 0;
-	int find_count = 0;
-	//	for (int idx = 0; idx < maxsize; idx++) {
+	long all_count = 0;
+	long find_count = 0;
 	for (auto ngramit = ngram.begin(); ngramit != ngram.end(); ngramit++) {
 		auto it = vocab.find(ngramit->first);
 		if (it != vocab.end() && it->second >= cutoff)
